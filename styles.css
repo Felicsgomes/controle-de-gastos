@@ -1,0 +1,538 @@
+:root {
+    --bg-main: #0F0F1E;
+    --bg-card: #1E1E2D;
+    --border-color: #3A3A4D;
+    --text-light: #E0E0E0;
+    --text-medium: #A0A0A0;
+    --text-dark: #777;
+    --accent-green: #00BFA5;
+    --accent-pink: #F92C85;
+    --accent-blue: #00A3FF;
+    --white: #FFFFFF;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-light);
+    padding: 20px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* --- ESTILOS DE LOGIN ATUALIZADOS --- */
+#login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+}
+
+.login-box {
+    background-color: var(--bg-card);
+    padding: 40px;
+    border-radius: 12px;
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+}
+
+.login-box h1 {
+    color: var(--white);
+    margin-bottom: 8px;
+}
+
+.login-box p {
+    color: var(--text-medium);
+    margin-bottom: 24px;
+}
+
+.login-box .form-group {
+    text-align: left;
+}
+
+.login-box .form-group label {
+    font-size: 0.9rem;
+}
+
+.login-box .form-group input {
+    margin-top: 4px;
+}
+
+/* Botão de alternar formulário */
+.toggle-form-btn {
+    background: none;
+    border: none;
+    color: var(--text-medium);
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-top: 20px;
+    display: block; /* Faz ocupar a linha toda */
+}
+.toggle-form-btn strong {
+    color: var(--accent-blue);
+}
+.toggle-form-btn:hover {
+    color: var(--white);
+}
+
+/* Mensagem de Erro */
+.auth-error {
+    background-color: rgba(249, 44, 133, 0.1);
+    color: var(--accent-pink);
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid var(--accent-pink);
+    margin-top: 16px;
+    font-size: 0.9rem;
+    text-align: left;
+}
+
+/* ESTILO DE AVISO ADICIONADO */
+.login-warning {
+    font-size: 0.85rem !important;
+    color: var(--text-medium) !important;
+    text-align: left;
+    margin-bottom: 16px !important;
+    background-color: rgba(255, 165, 0, 0.1);
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--text-medium);
+}
+.login-warning b {
+    color: var(--text-light);
+}
+/* --- FIM DOS ESTILOS DE LOGIN --- */
+
+
+#user-info {
+    color: var(--text-medium);
+    font-size: 0.9rem;
+    margin-right: 16px;
+    word-break: break-all;
+}
+
+.app-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+header h1 {
+    color: var(--white);
+    font-size: 2rem;
+}
+
+.controls {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center; 
+}
+
+/* NOVO: Estilo para o link "Sair" */
+.logout-link {
+    color: var(--accent-pink);
+    font-weight: 500;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 12px 0; /* Alinha com os botões */
+    margin-left: 8px;
+}
+.logout-link:hover {
+    text-decoration: underline;
+}
+
+.control-select, .btn {
+    padding: 12px 18px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.control-select {
+    background-color: var(--bg-card);
+    color: var(--text-light);
+    border: 1px solid var(--border-color);
+}
+
+.btn {
+    color: var(--white);
+}
+
+.btn-green {
+    background-color: var(--accent-green);
+}
+.btn-green:hover {
+    background-color: #00a08a;
+}
+
+.btn-pink {
+    background-color: var(--accent-pink);
+}
+.btn-pink:hover {
+    background-color: #d12570;
+}
+
+.btn-blue {
+    background-color: var(--accent-blue);
+}
+.btn-blue:hover {
+    background-color: #0082cc;
+}
+
+.dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+#investment-dashboard {
+    margin-top: 4px;
+}
+
+.card {
+    background-color: var(--bg-card);
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.card h3 {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-medium);
+    margin-bottom: 12px;
+}
+
+.card .amount {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.card .amount.positive {
+    color: var(--accent-green);
+}
+
+.card .amount.negative {
+    color: var(--accent-pink);
+}
+
+.card .amount.neutral {
+    color: var(--white);
+}
+
+.card .amount.invested {
+    color: var(--accent-blue);
+}
+
+.lists {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.list-section {
+    background-color: var(--bg-card);
+    padding: 24px;
+    border-radius: 12px;
+}
+
+.list-section h2 {
+    font-size: 1.25rem;
+    color: var(--white);
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.list-section ul {
+    list-style: none;
+    height: 300px;
+    overflow-y: auto;
+}
+
+.list-section ul::-webkit-scrollbar {
+    width: 6px;
+}
+.list-section ul::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 3px;
+}
+.list-section ul::-webkit-scrollbar-track {
+    background: var(--bg-card);
+}
+
+
+.list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 4px;
+    border-bottom: 1px solid #2a2a3a;
+    gap: 10px;
+}
+
+.list-item:last-child {
+    border-bottom: none;
+}
+
+.list-item span {
+    font-size: 0.95rem;
+}
+
+.list-item .description {
+    color: var(--text-light);
+}
+
+.list-item .amount-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.list-item .amount {
+    font-weight: 500;
+    color: var(--accent-pink);
+}
+
+.list-item .amount.invested {
+    color: var(--accent-blue);
+}
+
+.list-item .amount.positive {
+    color: var(--accent-green);
+}
+
+.list-item .item-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.list-item .action-btn {
+    background: none;
+    border: none;
+    color: var(--text-medium);
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: color 0.2s;
+}
+.list-item .action-btn:hover {
+    color: var(--white);
+}
+
+.empty-list {
+    color: var(--text-dark);
+    text-align: center;
+    padding-top: 20px;
+    font-style: italic;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background-color: var(--bg-card);
+    margin: 10% auto;
+    padding: 30px;
+    border-radius: 12px;
+    max-width: 500px;
+    width: 90%;
+    position: relative;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+}
+
+.modal-close {
+    color: #AAA;
+    position: absolute;
+    top: 15px;
+    right: 25px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.modal-close:hover,
+.modal-close:focus {
+    color: var(--text-light);
+}
+
+.modal h2 {
+    margin-bottom: 24px;
+    color: var(--white);
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--text-medium);
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group input[type="date"],
+.form-group input[type="email"],
+.form-group input[type="password"],
+.form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: var(--bg-main);
+    color: var(--text-light);
+    font-size: 1rem;
+    font-family: 'Inter', sans-serif;
+}
+
+.form-group input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.6);
+}
+
+
+.form-group input:disabled,
+.form-group select:disabled {
+    background-color: #2a2a3a;
+    color: var(--text-dark);
+}
+
+.radio-group {
+    display: flex;
+    gap: 16px;
+    margin-top: 20px;
+}
+.radio-group label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-light);
+    cursor: pointer;
+}
+.radio-group input[type="radio"] {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--border-color);
+    border-radius: 50%;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+.radio-group input[type="radio"]:checked {
+    background-color: var(--accent-pink);
+    border-color: var(--accent-pink);
+}
+
+#investment-form .radio-group input[type="radio"]:checked {
+     background-color: var(--accent-blue);
+    border-color: var(--accent-blue);
+}
+
+.radio-group input[type="radio"]:checked::after {
+    content: '';
+    display: block;
+    width: 8px;
+    height: 8px;
+    background: var(--white);
+    border-radius: 50%;
+    margin: 3px;
+}
+
+.radio-group input[type="radio"]:disabled {
+    cursor: not-allowed;
+    background-color: #2a2a3a;
+    border-color: #2a2a3a;
+}
+.radio-group input[type="radio"]:disabled + span {
+    color: var(--text-dark);
+    cursor: not-allowed;
+}
+
+.hidden-field {
+    display: none;
+}
+
+#expense-installment-values-container .form-group,
+#investment-installment-values-container .form-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+#expense-installment-values-container .form-group label,
+#investment-installment-values-container .form-group label {
+    margin-bottom: 0;
+    flex-shrink: 0;
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+
+#expense-installment-values-container .form-group input,
+#investment-installment-values-container .form-group input {
+    font-size: 0.9rem;
+    padding: 8px 12px;
+}
+
+#expense-installment-values-container::-webkit-scrollbar,
+#investment-installment-values-container::-webkit-scrollbar {
+    width: 5px;
+}
+#expense-installment-values-container::-webkit-scrollbar-thumb,
+#investment-installment-values-container::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 3px;
+}
+#expense-installment-values-container::-webkit-scrollbar-track,
+#investment-installment-values-container::-webkit-scrollbar-track {
+    background: var(--bg-main);
+}
+
+.list-item .item-details {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex-grow: 1;
+    margin-right: 10px;
+    word-break: break-word;
+}
+
+.list-item .list-item-date {
+    font-size: 0.85rem;
+    color: var(--text-medium);
+    font-style: italic;
+}

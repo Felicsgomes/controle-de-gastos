@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controlador de Gastos</title>
+    
+    <!-- Links de Fonte -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Link para o CSS Externo -->
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- SDKs do Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+</head>
+<body>
+
+    <!-- TELA DE LOGIN (ATUALIZADA COM MÚLTIPLAS OPÇÕES) -->
+    <div id="login-container">
+        <div class="login-box">
+
+            <!-- Formulário de Login Privado (Email) -->
+            <form id="login-form">
+                <h1>Acesso Privado</h1>
+                <p>Use seu email e senha.</p>
+                <div class="form-group">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Senha</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <div id="login-error" class="auth-error hidden"></div>
+                <button type="submit" class="btn btn-blue" style="width:100%">Entrar</button>
+                <button type="button" id="show-register-btn" class="toggle-form-btn">Não tem conta? <strong>Registre-se</strong></button>
+                <button type="button" id="show-public-login-btn" class="toggle-form-btn">...ou use o Acesso Rápido/Público</button>
+            </form>
+
+            <!-- Formulário de Cadastro (Email) -->
+            <form id="register-form" class="hidden">
+                <h1>Registrar Conta</h1>
+                <p>Crie uma conta privada e segura.</p>
+                <div class="form-group">
+                    <label for="register-email">Email</label>
+                    <input type="email" id="register-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-password">Senha (mínimo 6 caracteres)</label>
+                    <input type="password" id="register-password" required>
+                </div>
+                <div id="register-error" class="auth-error hidden"></div>
+                <button type="submit" class="btn btn-green" style="width:100%">Criar Conta</button>
+                <button type="button" id="show-login-from-register-btn" class="toggle-form-btn">Já tem conta? <strong>Entrar</strong></button>
+            </form>
+
+            <!-- Formulário de Login Rápido/Público (Nome) -->
+            <form id="name-login-form" class="hidden">
+                <h1>Acesso Rápido/Público</h1>
+                <p>Digite seu nome de usuário único.</p>
+                <div class="form-group">
+                    <label for="user-name-input">Seu Nome de Usuário</label>
+                    <input type="text" id="user-name-input" required placeholder="Ex: joao-secreto123">
+                </div>
+                <p class="login-warning"><b>Aviso:</b> Este nome é público. Qualquer pessoa com este nome pode ver e editar seus dados!</p>
+                <button type="submit" class="btn btn-blue" style="width:100%">Entrar</button>
+                <button type="button" id="show-private-login-btn" class="toggle-form-btn">...ou use o Acesso Privado (Email)</button>
+            </form>
+
+        </div>
+    </div>
+
+    <!-- APP PRINCIPAL (Continua escondido) -->
+    <div id="app-wrapper" class="hidden">
+        <div class="app-container">
+            
+            <header>
+                <h1>Meu Orçamento</h1>
+                <div class="controls">
+                    <span id="user-info"></span>
+                    <select id="month-selector" class="control-select"></select>
+                    <button id="add-income-btn" class="btn btn-green">Adicionar Ganho</button>
+                    <button id="add-expense-btn" class="btn btn-pink">Adicionar Gasto</button>
+                    <button id="add-investment-btn" class="btn btn-blue">Adicionar Investimento</button>
+                    <!-- BOTÃO "SAIR" ATUALIZADO PARA LINK DE TEXTO -->
+                    <span id="logout-btn" class="logout-link">Sair</span>
+                </div>
+            </header>
+
+            <!-- O resto do app é o mesmo -->
+            <div class="dashboard">
+                <div class="card">
+                    <h3>Saldo do Mês</h3>
+                    <div id="total-income" class="amount positive">R$ 0,00</div>
+                </div>
+                <div class="card">
+                    <h3>Gastos do Mês</h3>
+                    <div id="total-daily-expense" class="amount negative">R$ 0,00</div>
+                </div>
+                <div class="card">
+                    <h3>Gastos Previstos</h3>
+                    <div id="total-projected-expense" class="amount negative">R$ 0,00</div>
+                </div>
+                <div class="card">
+                    <h3>Saldo Líquido</h3>
+                    <div id="net-balance" class="amount neutral">R$ 0,00</div>
+                </div>
+            </div>
+
+            <div class="lists">
+                <div class="list-section">
+                    <h2>Ganhos do Mês</h2>
+                    <ul id="gains-list">
+                        <li class="empty-list">Nenhum ganho este mês.</li>
+                    </ul>
+                </div>
+                <div class="list-section">
+                    <h2>Gastos do Mês (Diários)</h2>
+                    <ul id="daily-expenses-list">
+                        <li class="empty-list">Nenhum gasto diário este mês.</li>
+                    </ul>
+                </div>
+                <div class="list-section">
+                    <h2>Gastos Previstos (Recorrentes)</h2>
+                    <ul id="projected-expenses-list">
+                        <li class="empty-list">Nenhum gasto previsto este mês.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="dashboard" id="investment-dashboard">
+                <div class="card">
+                    <h3>Total Investido (Mês)</h3>
+                    <div id="total-invested-month" class="amount invested">R$ 0,00</div>
+                </div>
+                <div class="card">
+                    <h3>Total Investimento (Geral)</h3>
+                    <div id="total-invested-all-time" class="amount invested">R$ 0,00</div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Modais (Sem alterações) -->
+        <div id="income-modal" class="modal">
+            <div class="modal-content">
+                <span class="modal-close" id="close-income-modal">&times;</span>
+                <h2 id="income-modal-title">Adicionar Ganho</h2>
+                <form id="income-form">
+                    <div class="form-group">
+                        <label for="income-description">Descrição</label>
+                        <input type="text" id="income-description" placeholder="Ex: Salário" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="income-amount">Valor (R$)</label>
+                        <input type="number" id="income-amount" placeholder="1000,00" step="0.01" min="0.01" required>
+                    </div>
+                    <button type="submit" id="income-submit-btn" class="btn btn-green" style="width: 100%;">Salvar Ganho</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="expense-modal" class="modal">
+            <div class="modal-content">
+                <span class="modal-close" id="close-expense-modal">&times;</span>
+                <h2 id="expense-modal-title">Adicionar Gasto</h2>
+                <form id="expense-form">
+                    
+                    <div class="form-group">
+                        <label for="expense-description">Descrição</label>
+                        <input type="text" id="expense-description" placeholder="Ex: Almoço, Netflix" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="expense-date">Data do Gasto</label>
+                        <input type="date" id="expense-date" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="expense-category">Categoria</label>
+                        <select id="expense-category" class="control-select" style="width: 100%;">
+                            <option value="outros">Outros</option>
+                            <option value="compras">Compras</option>
+                            <option value="lazer">Lazer</option>
+                            <option value="comida_fora">Comida Fora</option>
+                            <option value="viagem">Viagem</option>
+                            <option value="saude">Saúde</option>
+                        </select>
+                    </div>
+
+                    <div id="expense-total-amount-group" class="form-group">
+                        <label for="expense-amount">Valor Total (R$)</label>
+                        <input type="number" id="expense-amount" placeholder="150,00" step="0.01" min="0.01" required>
+                    </div>
+
+                    <div class="form-group radio-group">
+                        <label>
+                            <input type="radio" name="expense-type" value="daily" checked>
+                            <span>Gasto Diário</span>
+                        </label>
+                        <label>
+                            <input type="radio" name="expense-type" value="recorrente">
+                            <span>Gasto Recorrente (Parcelado)</span>
+                        </label>
+                    </div>
+
+                    <div id="expense-installments-group" class="form-group hidden-field">
+                        <label for="expense-installments">Número de Parcelas</label>
+                        <input type="number" id="expense-installments" value="1" min="1" max="60">
+                        
+                        <div id="expense-installment-values-container" style="margin-top: 16px; max-height: 200px; overflow-y: auto; padding-right: 10px;">
+                        </div>
+                    </div>
+
+                    <button type="submit" id="expense-submit-btn" class="btn btn-pink" style="width: 100%;">Salvar Gasto</button>
+                </form>
+            </div>
+        </div>
+        
+        <div id="investment-modal" class="modal">
+            <div class="modal-content">
+                <span class="modal-close" id="close-investment-modal">&times;</span>
+                <h2 id="investment-modal-title">Adicionar Investimento</h2>
+                <form id="investment-form">
+                    
+                    <div class="form-group">
+                        <label for="investment-description">Descrição</label>
+                        <input type="text" id="investment-description" placeholder="Ex: CDB, Ação XYZ" required>
+                    </div>
+
+                    <div id="investment-total-amount-group" class="form-group">
+                        <label for="investment-amount">Valor Total (R$)</label>
+                        <input type="number" id="investment-amount" placeholder="1000,00" step="0.01" min="0.01" required>
+                    </div>
+
+                    <div class="form-group radio-group">
+                        <label>
+                            <input type="radio" name="investment-type" value="daily" checked>
+                            <span>Aporte Único</span>
+                        </label>
+                        <label>
+                            <input type="radio" name="investment-type" value="recorrente">
+                            <span>Aporte Recorrente (Parcelado)</span>
+                        </label>
+                    </div>
+
+                    <div id="investment-installments-group" class="form-group hidden-field">
+                        <label for="investment-installments">Número de Parcelas</label>
+                        <input type="number" id="investment-installments" value="1" min="1" max="60">
+                        
+                        <div id="investment-installment-values-container" style="margin-top: 16px; max-height: 200px; overflow-y: auto; padding-right: 10px;">
+                        </div>
+                    </div>
+
+                    <button type="submit" id="investment-submit-btn" class="btn btn-blue" style="width: 100%;">Salvar Investimento</button>
+                </form>
+            </div>
+        </div>
+    </div> <!-- Fim do #app-wrapper -->
+
+    <!-- Link para o JavaScript Externo -->
+    <script src="app.js"></script>
+</body>
+</html>
