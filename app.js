@@ -558,7 +558,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             await addNewTransaction('expense', type);
         }
-        await saveDatabase();
+        await saveDatabase(); // Salva o mês atual (que pode ter sido modificado)
         updateUI();
         hideModal(expenseModal);
     }
@@ -572,7 +572,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             await addNewTransaction('investment', type);
         }
-        await saveDatabase();
+        await saveDatabase(); // Salva o mês atual (que pode ter sido modificado)
         updateUI();
         hideModal(investmentModal);
     }
@@ -648,14 +648,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 const installmentData = { description: installmentDescription, amount: installmentAmount, category, id, date: installmentDate };
 
-                // Salva a parcela no mês correspondente
-                const docRef = dbCollectionPath.collection('months').doc(targetKey);
-                const doc = await docRef.get();
-                const monthData = doc.exists ? doc.data() : getMonthData();
-                
-                if (!monthData.projectedExpenses) monthData.projectedExpenses = [];
-                monthData.projectedExpenses.push(installmentData);
-                await docRef.set(monthData); // Salva o mês da parcela
+                // *** INÍCIO DA CORREÇÃO DO BUG ***
+                if (targetKey === currentMonthKey) {
+                    // É o mês atual! Modifica o cache local (currentMonthData)
+                    if (!currentMonthData.projectedExpenses) currentMonthData.projectedExpenses = [];
+                    currentMonthData.projectedExpenses.push(installmentData);
+                } else {
+                    // É um mês futuro! Faz a operação normal de carregar/salvar
+                    const docRef = dbCollectionPath.collection('months').doc(targetKey);
+                    const doc = await docRef.get();
+                    const monthData = doc.exists ? doc.data() : getMonthData();
+                    
+                    if (!monthData.projectedExpenses) monthData.projectedExpenses = [];
+                    monthData.projectedExpenses.push(installmentData);
+                    await docRef.set(monthData); // Salva o mês da parcela
+                }
+                // *** FIM DA CORREÇÃO DO BUG ***
 
                 if (category === 'investimentos') totalInvestmentAmount += installmentAmount;
             }
